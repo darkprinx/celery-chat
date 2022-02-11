@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  message_server_web:
+    env_file:
+      - message_server.example.env
+    build: ./celery_message_server
+    container_name: message_server
+    command: gunicorn message_server.wsgi:application --bind 0.0.0.0:8009 --timeout 600 --workers=3
+    ports:
+      - "8009:8009"
+  message_server_celery:
+    env_file:
+      - message_server.example.env
+    build: ./celery_message_server
+    container_name: message_server_celery
+    command: celery -A message_server worker -l INFO -Q message_server
+  first_worker_server:
+    env_file:
+      - first_worker.example.env
+    build: celery_worker_server
+    container_name: first_worker_server
+    command: gunicorn worker_server.wsgi:application --bind 0.0.0.0:8008 --timeout 600 --workers=3
+    ports:
+      - "8008:8008"
+  first_worker_server_celery:
+    env_file:
+      - first_worker.example.env
+    build: celery_worker_server
+    container_name: first_worker_server_celery
+    command: celery -A worker_server worker -l INFO -Q queue-1
+  second_worker_server:
+    env_file:
+      - second_worker.example.env
+    build: celery_worker_server
+    container_name: second_worker_server
+    command: gunicorn worker_server.wsgi:application --bind 0.0.0.0:8007 --timeout 600 --workers=3
+    ports:
+      - "8007:8007"
+  second_worker_server_celery:
+    env_file:
+      - second_worker.example.env
+    build: celery_worker_server
+    container_name: second_worker_server_celery
+    command: celery -A worker_server worker -l INFO -Q queue-2
+  third_worker_server:
+    env_file:
+      - third_worker.example.env
+    build: celery_worker_server
+    container_name: third_worker_server
+    command: gunicorn worker_server.wsgi:application --bind 0.0.0.0:8006 --timeout 600 --workers=3
+    ports:
+      - "8006:8006"
+  third_worker_server_celery:
+    env_file:
+      - third_worker.example.env
+    build: celery_worker_server
+    container_name: third_worker_server_celery
+    command: celery -A worker_server worker -l INFO -Q queue-3
