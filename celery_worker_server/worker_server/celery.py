@@ -5,7 +5,7 @@ from celery import Celery
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'worker_server.settings')
 
-app = Celery('worker_server')
+app = Celery('celery_worker_server', include=['task.task'])
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.

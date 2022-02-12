@@ -1,5 +1,5 @@
 from celery import Celery
-from .models import FinishedTask
+# from .models import FinishedTask
 from django.conf import settings
 from worker_server.celery import app
 import logging
@@ -8,16 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 @app.task(bind=True)
-def new_task(self, message):
-    if message.get("message_type") == "send":
-        FinishedTask.objects.create(**{"message": "Got task from: {} to {}".format(message.get("from"),
-                                                                                   message.get("to"))})
-        logger.error("Got task from: {} to {}".format(message.get("from"), message.get("to")))
-    else:
-        FinishedTask.objects.create(**{"message": "Receive reply from: {} to {}".format(message.get("from"),
-                                                                                        message.get("to"))})
-        logger.error("Receive reply from: {} to {} and payload is: ".format(message.get("from"), message.get("to")),
-                     message)
+def process_message_task(self, message):
+    logger.error("###### Message from {} to {} ######".format(message.get('from'), message.get('to')))
 
     if message.get("message_type") == "send":
         payload = {

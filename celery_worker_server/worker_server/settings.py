@@ -21,14 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-um$=s6$^p6$hj-#wmg9i%1i)+a2+us5&-6(tm%4v+c!w_505q_'
-MESSAGE_SERVER_BROKER = None
+MESSAGE_SERVER_BROKER = 'redis://192.168.0.109:6379'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CELERY_BROKER_URL = "redis://192.168.1.107:6379/"
-CELERY_DEFAULT_QUEUE = "queue_1"
+CELERY_BROKER_URL = 'redis://192.168.0.109:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # Application definition
 
@@ -76,14 +78,26 @@ WSGI_APPLICATION = 'worker_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.environ.get("DB_NAME"),
+#             "USER": os.environ.get("DB_USER"),
+#             "PASSWORD": os.environ.get("DB_PASSWORD"),
+#             "HOST": os.environ.get("DB_HOST"),
+#             "PORT": os.environ.get("DB_PORT")
+#         },
+# }
+
+
 DATABASES = {
     "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("DB_NAME"),
-            "USER": os.environ.get("DB_USER"),
-            "PASSWORD": os.environ.get("DB_PASSWORD"),
-            "HOST": os.environ.get("DB_HOST"),
-            "PORT": os.environ.get("DB_PORT")
+            "NAME": 'message_server',
+            "USER": 'postgres',
+            "PASSWORD": 'postgres',
+            "HOST": '192.168.0.109',
+            "PORT": '5432'
         },
 }
 

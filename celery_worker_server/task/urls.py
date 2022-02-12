@@ -1,9 +1,8 @@
 from django.urls import path
 
-from .views import assign_task, hand_shaking, check
+from .views import initiate_message, connect_message_server
 
 urlpatterns = [
-    path('assign-task/', assign_task),
-    path('hand-shaking/', hand_shaking),
-    path('check/', check),
+    path('connect-message-server/', connect_message_server),
+    path('initiate-message/', initiate_message),
 ]
